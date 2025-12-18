@@ -1,0 +1,87 @@
+@import 'tailwindcss';
+
+@theme {
+  /* 自定义霓虹颜色 */
+  --color-neon-pink: #ff00ff;
+  --color-neon-purple: #9d00ff;
+  --color-neon-blue: #00ffff;
+  --color-neon-green: #00ff00;
+  --color-neon-yellow: #ffff00;
+  
+  /* 稀有度颜色 */
+  --color-rarity-r: #9ca3af;
+  --color-rarity-sr: #60a5fa;
+  --color-rarity-ssr: #fbbf24;
+  
+  /* 自定义阴影 */
+  --shadow-neon-pink: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff;
+  --shadow-neon-purple: 0 0 10px #9d00ff, 0 0 20px #9d00ff, 0 0 30px #9d00ff, 0 0 40px #9d00ff;
+  --shadow-neon-blue: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+  --shadow-neon-yellow: 0 0 10px #ffff00, 0 0 20px #ffff00, 0 0 30px #ffff00, 0 0 40px #ffff00;
+  
+  /* 自定义动画 */
+  --animate-pulse-neon: pulse-neon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-neon {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+  }
+  100% {
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor, 0 0 40px currentColor;
+  }
+}
+
+@layer base {
+  body {
+    background-color: rgb(17 24 39); /* bg-gray-900 */
+    color: rgb(255 255 255); /* text-white */
+    min-height: 100vh; /* min-h-screen */
+  }
+}
+
+@layer utilities {
+  .text-shadow-neon {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+  
+  .text-shadow-neon-sm {
+    text-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+  }
+  
+  .text-shadow-neon-lg {
+    text-shadow: 0 0 20px currentColor, 0 0 30px currentColor, 0 0 40px currentColor;
+  }
+  
+  .box-shadow-neon-pink {
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+  }
+  
+  .box-shadow-neon-purple {
+    box-shadow: 0 0 10px #9d00ff, 0 0 20px #9d00ff, 0 0 30px #9d00ff;
+  }
+  
+  .box-shadow-neon-blue {
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  }
+  
+  .animate-pulse-neon {
+    animation: var(--animate-pulse-neon);
+  }
+  
+  .animate-glow {
+    animation: var(--animate-glow);
+  }
+}

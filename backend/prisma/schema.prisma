@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ItemType {
+  PHOTO
+  TEXT
+  COUPON
+}
+
+enum Rarity {
+  R
+  SR
+  SSR
+}
+
+enum CurrencyType {
+  COIN
+  TICKET
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  password      String
+  avatarUrl     String?   @map("avatar_url")
+  coinsBalance  Int       @default(100) @map("coins_balance")
+  ticketsBalance Int      @default(0) @map("tickets_balance")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  lastLoginAt   DateTime  @default(now()) @map("last_login_at")
+  
+  inventory     UserInventory[]
+  transactions  Transaction[]
+  
+  @@map("users")
+}
+
+model Item {
+  id          Int       @id @default(autoincrement())
+  type        ItemType
+  rarity      Rarity
+  title       String?
+  content     String
+  description String?
+  isHidden    Boolean   @default(false) @map("is_hidden")
+  
+  lootTables  GameLootTable[]
+  inventory   UserInventory[]
+  
+  @@map("items")
+  @@index([type, rarity])
+}
+
+model Game {
+  code        String   @id
+  name        String
+  costPerPlay Int      @default(10) @map("cost_per_play")
+  isActive    Boolean  @default(true) @map("is_active")
+  
+  lootTables  GameLootTable[]
+  
+  @@map("games")
+}
+
+model GameLootTable {
+  id          Int      @id @default(autoincrement())
+  gameCode    String   @map("game_code")
+  itemId      Int      @map("item_id")
+  weight      Int
+  isGuaranteed Boolean @default(false) @map("is_guaranteed")
+  
+  game        Game     @relation(fields: [gameCode], references: [code], onDelete: Cascade)
+  item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  
+  @@map("game_loot_tables")
+  @@index([gameCode])
+}
+
+model UserInventory {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @map("user_id")
+  itemId       Int       @map("item_id")
+  obtainedAt   DateTime  @default(now()) @map("obtained_at")
+  isConsumed   Boolean   @default(false) @map("is_consumed")
+  sourceGameCode String? @map("source_game_code")
+  
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item         Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  
+  @@map("user_inventory")
+  @@index([userId])
+  @@index([userId, obtainedAt])
+}
+
+model Transaction {
+  id           Int          @id @default(autoincrement())
+  userId       Int          @map("user_id")
+  amount       Int
+  currencyType CurrencyType @map("currency_type")
+  reason       String?
+  createdAt    DateTime     @default(now()) @map("created_at")
+  
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("transactions")
+  @@index([userId, createdAt])
+}
+
+
